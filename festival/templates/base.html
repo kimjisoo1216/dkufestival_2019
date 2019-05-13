@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>2019 DKU FESTIVAL</title>
+    {% load static %}
+
+    {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'base/base.css' %}"> {% endcomment %}
+    <style>
+    .body{
+        margin:15;padding:0;
+        height:100%;
+        width:300px;
+    }
+
+    .header{
+        text-align: center;
+        border:0;
+        border-radius: 0.1em;
+        padding:0.9em;
+        min-height:30px;
+        box-shadow: 0 3px 5px grey ;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        position:relative;
+        z-index:1;
+        background-color:black; 
+        font-size:1.08em;
+        font-weight:500;
+    }
+    .logo-box{
+    }
+    .logo-box a{
+        color:white;
+    }
+    .contents{
+        margin,padding:0;
+        padding: 1em;
+        height:80%;
+        border:0;
+        border-radius: 1em;
+        overflow:auto;
+        max-height:70%;
+    }
+    .footer{
+        border-radius: 0;
+        border:0;
+        background-color:black;
+        color:white;
+        padding: 1em;
+    }
+    .footer{
+        text-align:right;
+    }
+    .livestream{
+        text-align:center;
+        border:0;
+        padding: 0.2em;
+        font-size:0.8em;
+    }
+    .livestream a{
+        font-size:0.5rem;
+    }
+
+
+    /*marquee*/
+    .marquee {
+    margin: 0 auto;
+    width: 600px;
+    height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+    position: relative;
+    }
+    .marquee:before, .marquee:after {
+    position: absolute;
+    top: 0;
+    width: 50px;
+    height: 30px;
+    content: "";
+    z-index: 1;
+    }
+    .marquee:before {
+    left: 0;
+    background: linear-gradient(to right, white 5%, transparent 100%);
+    }
+    .marquee:after {
+    right: 0;
+    background: linear-gradient(to left, white 5%, transparent 100%);
+    }
+
+    .marquee-content {
+    width: 300% !important;
+    display: flex;
+    line-height: 30px;
+    -webkit-animation: marquee 10s linear infinite forwards;
+            animation: marquee 10s linear infinite forwards;
+    }
+    .marquee-content:hover {
+    -webkit-animation-play-state: paused;
+            animation-play-state: paused;
+    }
+
+    .list-inline {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    /* reset list */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    }
+
+    @-webkit-keyframes marquee {
+    0% {
+        -webkit-transform: translateX(0);
+                transform: translateX(0);
+    }
+    100% {
+        -webkit-transform: translateX(-66.6%);
+                transform: translateX(-66.6%);
+    }
+    }
+
+    @keyframes marquee {
+    0% {
+        -webkit-transform: translateX(0);
+                transform: translateX(0);
+    }
+    100% {
+        -webkit-transform: translateX(-66.6%);
+                transform: translateX(-66.6%);
+    }
+    }
+
+    
+
+
+
+        
+    </style>
+</head>
+<body>
+    <div>
+        {% load static %}
+        <div class="header">
+            <div class="logo-box">
+                <a href="{% url 'home' %}"><img src="{% static 'img/logo.jpg' %}" width=30%></a>
+            </div>
+        </div>
+        <div class="contents">
+            {% block content %}
+            
+            {% endblock %}
+        </div>
+        <div class="footer">
+
+            <!--livestream-->
+            <div class="livestream" type="text" name="livestream" >
+            </div>
+
+            <!--marquee version-->
+            <!--
+            <div>
+                <div class="marquee">
+                    <div class="marquee-content">
+                        <ul class="list-inline">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            -->
+
+            <br>
+            <span style="font-size:0.5em">made by 멋쟁이 사자처럼</span>
+        </div>
+    </div>
+
+    <script>
+        const livestream = document.querySelector('.livestream');
+        const livestream2 = document.querySelector('.marquee');
+        const posts_json = `{{posts_json|safe}}`;
+
+        const posts = JSON.parse(posts_json);
+        console.log(posts);
+
+        keys = [];
+
+        for (let key in posts){
+            if (posts.hasOwnProperty(key)){keys.push(key);}
+        }
+
+        function loadLivestream() {
+            for(i=0;i<keys.length;i++){
+                (function(i){
+                    const name = keys[i]
+                    const post = posts[name]
+                    setTimeout(() => {
+                    livestream.innerText = `${name} 님 :  '${post}'`
+                }, i===0 ? 0 : i*2200);
+                })(i)
+            }
+        }
+
+        /*
+        function loadLivestream2() {
+            for(i=0;i<keys.length;i++){
+                (function(i){
+                    const name = keys[i]
+                    const post = posts[name]
+                    const node = document.createElement('li');
+                    const textnode = document.createTextNode(`${name} 님 :  '${post}'`)
+                    node.appendChild(textnode)
+                    livestream2.appendChild(node)
+                })(i)
+            }
+        }
+        */
+
+        function init() {
+            loadLivestream();
+        }
+
+
+        init();
+    </script>
+</body>
+</html>
